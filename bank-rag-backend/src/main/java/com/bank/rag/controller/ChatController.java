@@ -16,8 +16,13 @@ public class ChatController {
 
     @PostMapping("/ask")
     public ResponseEntity<ChatMessage> askQuestion(@RequestBody ChatMessage input) {
-        String answer = ragService.generateAnswer(input.getContent());
-        return ResponseEntity.ok(new ChatMessage(answer, "assistant"));
+        try {
+            String answer = ragService.generateAnswer(input.getContent());
+            return ResponseEntity.ok(new ChatMessage(answer, "assistant"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(new ChatMessage("I'm sorry, I'm experiencing an issue with the AI Service. Please check if the OPENAI_API_KEY environment variable is configured correctly on Render.", "assistant"));
+        }
     }
 
     @PostMapping("/ingest")
