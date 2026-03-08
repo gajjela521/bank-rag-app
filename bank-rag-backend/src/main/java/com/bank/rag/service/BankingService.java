@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BankingService {
@@ -35,7 +34,7 @@ public class BankingService {
         return customerRepository.save(customer);
     }
 
-    // Seed some data if empty (for demo)
+    @jakarta.annotation.PostConstruct
     public void seedData() {
         if (customerRepository.count() == 0) {
             Customer c1 = new Customer();
@@ -43,7 +42,7 @@ public class BankingService {
             c1.setLastName("Doe");
             c1.setEmail("john.doe@example.com");
             c1.setPhoneNumber("555-0100");
-
+            c1.setSsnLast4("1234");
             Account a1 = new Account(null, "chk_123456", "CHECKING", new BigDecimal("1500.00"), c1);
             Account a2 = new Account(null, "sav_123456", "SAVINGS", new BigDecimal("5000.00"), c1);
 
@@ -55,6 +54,7 @@ public class BankingService {
             c2.setLastName("Smith");
             c2.setEmail("jane.smith@example.com");
             c2.setPhoneNumber("555-0200");
+            c2.setSsnLast4("5678");
 
             Account a3 = new Account(null, "chk_987654", "CHECKING", new BigDecimal("2800.50"), c2);
             c2.setAccounts(List.of(a3));
@@ -62,5 +62,10 @@ public class BankingService {
 
             System.out.println("Seeded customer data");
         }
+    }
+
+    public Customer getCustomerByDetails(String firstName, String lastName, String ssnLast4) {
+        return customerRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndSsnLast4(firstName, lastName, ssnLast4)
+                .orElse(null);
     }
 }

@@ -14,6 +14,7 @@ public class Customer {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String ssnLast4;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accounts;
@@ -59,6 +60,14 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getSsnLast4() {
+        return ssnLast4;
+    }
+
+    public void setSsnLast4(String ssnLast4) {
+        this.ssnLast4 = ssnLast4;
     }
 
     public List<Account> getAccounts() {

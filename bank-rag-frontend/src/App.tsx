@@ -71,7 +71,7 @@ function App() {
         const fallback: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "I'm sorry, I cannot connect to the banking server at the moment. Please ensure the Spring Boot backend is running on port 8080.",
+          content: "I'm sorry, I cannot connect to the banking server at the moment. Please try again later.",
           timestamp: new Date()
         }
         setMessages(prev => [...prev, fallback])

@@ -87,12 +87,11 @@ public class RagService {
         // 2. Construct System Prompt
         String systemText = """
                 You are a helpful banking assistant.
-                Use the following pieces of context to answer the question at the end.
-                If the answer is not in the context, say that you do not know.
-                Do not make up answers.
-                Keep the answer precise and to the point.
+                You have access to a general RAG context for general banking questions, and you have access to a 'getCustomerDetails' function to lookup a user's account details (balances, types, number, info) if they provide their First Name, Last Name, and the last 4 digits of their SSN.
 
-                Context:
+                If the user asks for personal account information over chat, use the function tool to fetch it and report it conversationally, DO NOT just dump the raw text.
+
+                Context for general queries:
                 {context}
                 """;
 
@@ -101,7 +100,12 @@ public class RagService {
 
         // 3. call Chat Client
         Message userMessage = new UserMessage(query);
-        Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
+
+        org.springframework.ai.openai.OpenAiChatOptions options = org.springframework.ai.openai.OpenAiChatOptions.builder()
+                .withFunction("getCustomerDetails")
+                .build();
+
+        Prompt prompt = new Prompt(List.of(systemMessage, userMessage), options);
 
         // Note: Temperature should be configured in properties or via ChatOptions here
         return chatClient.call(prompt).getResult().getOutput().getContent();
