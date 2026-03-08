@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: bank-rag-backend
+    runtime: docker
+    rootDir: bank-rag-backend
+    plan: free
+    region: ohio
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false

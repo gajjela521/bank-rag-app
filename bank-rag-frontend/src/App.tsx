@@ -46,7 +46,8 @@ function App() {
 
     try {
       // Simulate/Call API
-      const response = await fetch('http://localhost:8080/api/chat/ask', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/chat/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: userMsg.content, role: 'user' })

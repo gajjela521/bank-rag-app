@@ -1,7 +1,9 @@
 package com.bank.rag.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
+@Entity
 public class Customer {
 
     @Id
