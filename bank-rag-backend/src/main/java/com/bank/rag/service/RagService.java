@@ -38,7 +38,26 @@ public class RagService {
         this.vectorStore = vectorStore;
     }
 
-    // Ingestion Logic
+    @jakarta.annotation.PostConstruct
+    public void autoIngest() {
+        try {
+            org.springframework.core.io.support.PathMatchingResourcePatternResolver resolver = new org.springframework.core.io.support.PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:data/*.md");
+            for (Resource resource : resources) {
+                org.springframework.ai.reader.TextReader reader = new org.springframework.ai.reader.TextReader(resource);
+                reader.getCustomMetadata().put("filename", resource.getFilename());
+                List<Document> documents = reader.get();
+                TokenTextSplitter splitter = new TokenTextSplitter();
+                List<Document> splittedDocs = splitter.apply(documents);
+                vectorStore.add(splittedDocs);
+                System.out.println("Auto-Ingested: " + resource.getFilename());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Manual Ingestion Logic (Legacy / CLI)
     public void ingestDocs(String folderPath) {
         try (Stream<Path> paths = Files.walk(Paths.get(folderPath))) {
             List<File> files = paths
